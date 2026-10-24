@@ -1,21 +1,24 @@
-# 🐧 Mój Pingwinek — Demo 2.0
+# 🐧 Mój Pingwinek — Demo 3.0
 
-**Klikalny pokaz aplikacji (bez instalacji):** https://thebestjob.github.io/mojpingwinek-app/
+**Interaktywny demo-web:** https://thebestjob.github.io/mojpingwinek-app/
 
-**Android APK:** https://github.com/TheBestJob/mojpingwinek-app/actions/workflows/android-apk.yml — otwórz najnowszy udany build i pobierz artefakt `MojPingwinek-demo-APK`. W ZIP znajduje się plik `app-debug.apk`.
+**APK na Androida:** https://github.com/TheBestJob/mojpingwinek-app/actions/workflows/android-apk.yml — wybierz ostatni zielony run, pobierz `MojPingwinek-demo-APK`, rozpakuj ZIP i zainstaluj plik `app-debug.apk`.
 
-## Co działa w demo
+## Funkcje prototypu
 
-- Ekran główny, menu dolne i nawigacja
-- Dokumenty i paszport medyczny (wyłącznie przykładowe)
-- Kalendarz: lokalne dodawanie demonstracyjnych wydarzeń
-- Dziennik: lokalne dodawanie demonstracyjnych obserwacji
-- Specjaliści, wsparcie rodzica, plan szkolny, kontakty i powiadomienia
+- Interfejs mobilny inspirowany oryginalnymi projektami Stitch: typografia Atkinson Hyperlegible Next, niebiesko-turkusowa paleta, wyraźne karty
+- Nawigacja dolna oraz ekran główny z profilem demonstracyjnym
+- Dokumenty: wyszukiwarka, filtrowanie i szczegóły przykładowych dokumentów
+- Kalendarz miesięczny, dodawanie i usuwanie demonstracyjnych wydarzeń
+- Dziennik obserwacji, dodawanie i usuwanie wpisów demonstracyjnych
+- Paszport medyczny, specjaliści, wsparcie rodzica, formalności i powiadomienia
+- Wyczyść dane demonstracyjne w Ustawieniach
+- Jeden interfejs w wersji browser i offline APK (lokalne zasoby WebView)
 
-### Ważne
+## Ograniczenia
 
-To **prototyp interfejsu** — nie jest podłączony do Firebase ani produkcyjnej bazy danych. Wpisy demonstracyjne przechowywane są w localStorage danego urządzenia/przeglądarki; nie synchronizują się pomiędzy urządzeniami. Nie wprowadzaj prawdziwych danych osobowych ani medycznych.
+**To nie jest jeszcze aplikacja produkcyjna.** Brak logowania, Firebase, synchronizacji między urządzeniami oraz możliwości faktycznego przesyłania dokumentów. Wpisy z formularzy zapisują się w nieszyfrowanym `localStorage` danego urządzenia. Nie wpisuj prawdziwych danych dzieci ani danych medycznych. Repozytorium jest publiczne.
 
-## Budowanie APK
+## Kolejny etap
 
-GitHub Actions: `.github/workflows/android-apk.yml`. Każdy push do `main` uruchamia automatyczny debug build APK. Publikacja w Google Play będzie wymagała podpisanego pakietu AAB i odrębnego przygotowania wersji produkcyjnej.
+Przygotowanie produkcyjnej architektury bezpieczeństwa, uwierzytelniania i backendu przed przechowywaniem danych wrażliwych.
