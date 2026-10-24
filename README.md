@@ -1,9 +1,21 @@
-# 🐧 Mój Pingwinek — demo
+# 🐧 Mój Pingwinek — Demo 2.0
 
-Browser demo: https://thebestjob.github.io/mojpingwinek-app/
+**Klikalny pokaz aplikacji (bez instalacji):** https://thebestjob.github.io/mojpingwinek-app/
 
-Android APK: Actions → Build Moj Pingwinek demo APK → Artifacts.
+**Android APK:** https://github.com/TheBestJob/mojpingwinek-app/actions/workflows/android-apk.yml — otwórz najnowszy udany build i pobierz artefakt `MojPingwinek-demo-APK`. W ZIP znajduje się plik `app-debug.apk`.
 
-Enable Pages under Settings → Pages → main / root.
+## Co działa w demo
 
-Demonstration only; no real medical data.
+- Ekran główny, menu dolne i nawigacja
+- Dokumenty i paszport medyczny (wyłącznie przykładowe)
+- Kalendarz: lokalne dodawanie demonstracyjnych wydarzeń
+- Dziennik: lokalne dodawanie demonstracyjnych obserwacji
+- Specjaliści, wsparcie rodzica, plan szkolny, kontakty i powiadomienia
+
+### Ważne
+
+To **prototyp interfejsu** — nie jest podłączony do Firebase ani produkcyjnej bazy danych. Wpisy demonstracyjne przechowywane są w localStorage danego urządzenia/przeglądarki; nie synchronizują się pomiędzy urządzeniami. Nie wprowadzaj prawdziwych danych osobowych ani medycznych.
+
+## Budowanie APK
+
+GitHub Actions: `.github/workflows/android-apk.yml`. Każdy push do `main` uruchamia automatyczny debug build APK. Publikacja w Google Play będzie wymagała podpisanego pakietu AAB i odrębnego przygotowania wersji produkcyjnej.
