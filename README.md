@@ -1,46 +1,43 @@
-# 🐧 Mój Pingwinek — test online (bez Google Calendar)
+# 🐧 Mój Pingwinek — Version 5.0 (online test)
 
-## Linki
-- **Nowy MVP online:** https://thebestjob.github.io/mojpingwinek-app/online.html
-- **Poprzedni Demo 3.0:** https://thebestjob.github.io/mojpingwinek-app/
-- **APK demonstracyjny (stara wersja offline):** https://github.com/TheBestJob/mojpingwinek-app/actions/workflows/android-apk.yml
+## Links
 
-**Status:** nowy MVP online jest przygotowany w kodzie, ale **rejestracja, logowanie i synchronizacja nie zadziałają**, zanim właściciel skonfiguruje własny projekt Firebase. Aktualny APK nie zawiera jeszcze integracji Firebase.
+- **Version 5.0: original mobile design + Firebase login and live data**: https://thebestjob.github.io/mojpingwinek-app/v5.html
+- Preserved **Demo 3.0 (offline prototype)**: https://thebestjob.github.io/mojpingwinek-app/
+- Preserved **Online 4.0 (simple interface)**: https://thebestjob.github.io/mojpingwinek-app/online.html
+- **Android APK builds**: https://github.com/TheBestJob/mojpingwinek-app/actions/workflows/android-apk.yml — successful build → Artifacts → `MojPingwinek-5.0-test-APK`
 
-## Uruchomienie środowiska testowego
+## What is implemented
 
-1. Wejdź na https://console.firebase.google.com/ i utwórz projekt `moj-pingwinek-test` (w osobnym projekcie od przyszłej produkcji).
-2. W Project settings → Your apps dodaj **Web app**. Skopiuj ustawienia Firebase do `firebase-config.js` (apiKey, authDomain, projectId, storageBucket, appId). To są identyfikatory klienta, **nie** prywatny klucz administratora.
-3. Authentication → Sign-in method → włącz **Email/Password**.
-4. Authentication → Settings → Authorized domains → dodaj `thebestjob.github.io` (bez protokołu i ścieżki).
-5. Firestore Database → utwórz bazę, wybierając odpowiedni region UE, i opublikuj zawartość `firestore.rules` na karcie Rules. **Nie używaj reguł test mode w środowisku udostępnionym testerom.**
-6. Storage → utwórz bucket, najlepiej w regionie UE, a następnie opublikuj `storage.rules` na karcie Rules. Firebase Storage może wymagać planu Blaze / dodania konta rozliczeniowego.
-7. Odczekaj na publikację GitHub Pages. Otwórz https://thebestjob.github.io/mojpingwinek-app/online.html.
-8. Utwórz fikcyjne konto testowe, dodaj wydarzenie i notatkę. Zaloguj się na innym urządzeniu tym samym kontem, aby sprawdzić synchronizację.
-9. Przetestuj separację danych: drugie testowe konto nie powinno mieć dostępu do dokumentów i wpisów pierwszego konta.
-10. Zanim dopuścisz rzeczywistych użytkowników i dane dzieci, przeprowadź audyt reguł, polityki prywatności, retencji i usuwania kont, procesu zgód, ochrony danych osobowych oraz zgodności z RODO. Rozważ MFA i weryfikację e-mail.
+- Firebase Authentication: create account, sign in/out, password reset
+- In-app monthly calendar: add and delete events, realtime Firebase sync, existing Online 4.0 events appear
+- Observation journal: add and delete notes, realtime Firebase sync, existing Online 4.0 notes appear
+- Firebase Storage upload/download/delete for PDF, JPG, PNG up to 10 MB, once Storage is activated and security rules are published
+- Original Demo 3.0 blue/teal dashboard and bottom navigation with mobile-friendly screens
+- Demonstration-only sections: medical passport, specialists, support, formalities, notifications
+- Version 5 Android **test APK** opens hosted `v5.html` so the phone and website use the same live Firebase backend; Internet required
 
-## Zakres MVP online
+## Firebase setup
 
-- E-mail/hasło: rejestracja, logowanie, wylogowanie, reset hasła
-- Kalendarz **wewnątrz aplikacji**: dodawanie, usuwanie i synchronizacja wydarzeń przez Firestore
-- Dziennik: dodawanie, usuwanie i synchronizacja notatek
-- Dokumenty: przesyłanie i pobieranie plików PDF/JPG/PNG (max 10 MB), usuwanie i osobny folder użytkownika
-- Firebase Security Rules dla kolekcji i bucketu
-- **Brak Google Calendar, Google OAuth i dostępu do zewnętrznych kalendarzy**
+Project ID: `pingwinek-test`.
 
-## Ograniczenia przed produkcją
+1. Enable Authentication → Email/Password.
+2. Firestore Database → Rules → publish [firestore.rules](firestore.rules).
+3. Authentication → Settings → Authorized domains: add `thebestjob.github.io` if needed.
+4. Storage → create bucket (may require Blaze billing) and publish [storage.rules](storage.rules).
+5. Test separate **fictional** user accounts: each must only see its own data.
+6. Test login, save/read/delete event and journal entry from two devices, then test fake PDF upload/delete.
+7. Do not invite real families or upload real sensitive information before privacy/security review.
 
-- Interfejs MVP online jest oddzielny od wizualnego Demo 3.0. Nie jest jeszcze połączony z aplikacją Android.
-- Nie ma jeszcze automatycznych przypomnień push, udostępniania danych między opiekunami, eksportu danych ani automatycznego usuwania konta i wszystkich plików.
-- Każdy uprawniony użytkownik testowy może utworzyć konto. Konieczne jest ograniczenie grona testerów i monitoring kosztów.
-- Nie przesyłaj prawdziwych danych wrażliwych dzieci do tego prototypu.
+## Important limitations
 
-## Pliki
+This is a **public-facing testing prototype**, not a production-ready health records app. It lacks child-specific consent/legal basis assessment, privacy documentation, data export and complete account deletion, comprehensive access-control testing, notifications and background reminders, monitoring and hardening. Firebase user data isn't ready for real child medical records. File downloads should currently be tested through the browser version, since the APK WebView's blob download support is limited. Google Calendar integration is intentionally excluded. The old app and web demos have not been overwritten.
 
-- `online.html` — frontend web
-- `online.js` — Firebase Auth / Firestore / Storage
-- `firebase-config.js` — ustawienia Twojego Firebase
-- `firestore.rules` — reguły dostępu do bazy
-- `storage.rules` — reguły dostępu do plików
-- `index.html` — dotychczasowy offline Demo 3.0
+## Repo structure
+
+- `index.html`: Demo 3.0
+- `online.html` and `online.js`: Version 4.0
+- `v5.html` and `v5.js`: combined Version 5.0
+- `firebase-config.js`: public Firebase Web SDK identifiers
+- `firestore.rules`, `storage.rules`: user-scoped access rules
+- `app/`: Android wrapper for hosted version 5.0
