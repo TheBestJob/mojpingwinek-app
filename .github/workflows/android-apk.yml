@@ -1,4 +1,4 @@
-name: Build Moj Pingwinek demo APK
+name: Build Moj Pingwinek 5.0 APK
 on:
   push:
     branches: [main]
@@ -23,5 +23,5 @@ jobs:
           /tmp/gradle-8.9/bin/gradle :app:assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: MojPingwinek-demo-APK
+          name: MojPingwinek-5.0-test-APK
           path: app/build/outputs/apk/debug/app-debug.apk
