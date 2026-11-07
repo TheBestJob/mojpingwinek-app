@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function mine(uid) { return request.auth != null && request.auth.uid == uid; }
+    match /users/{uid} {
+      allow read, create, update, delete: if mine(uid);
+      match /events/{id} {
+        allow read, delete: if mine(uid);
+        allow create, update: if mine(uid)
+          && request.resource.data.keys().hasOnly(['title', 'date', 'time', 'notes', 'createdAt'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 150
+          && request.resource.data.date is string && request.resource.data.date.size() == 10
+          && request.resource.data.time is string && request.resource.data.time.size() <= 5
+          && request.resource.data.notes is string && request.resource.data.notes.size() <= 1500;
+      }
+      match /notes/{id} {
+        allow read, delete: if mine(uid);
+        allow create, update: if mine(uid)
+          && request.resource.data.keys().hasOnly(['title', 'body', 'createdAt'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 150
+          && request.resource.data.body is string && request.resource.data.body.size() <= 5000;
+      }
+      // Version 5.2 medical data: TEST DATA ONLY, per-account access.
+      match /medicalProfile/{id} {
+        allow read, delete: if mine(uid) && id == 'main';
+        allow create, update: if mine(uid) && id == 'main'
+          && request.resource.data.keys().hasOnly(['name','birth','allergies','updatedAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+          && request.resource.data.birth is string && request.resource.data.birth.size() <= 10
+          && request.resource.data.allergies is string && request.resource.data.allergies.size() <= 300;
+      }
+      match /diagnoses/{id} {
+        allow read, delete: if mine(uid);
+        allow create, update: if mine(uid)
+          && request.resource.data.keys().hasOnly(['name','code','date','doctor','createdAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 120
+          && request.resource.data.code is string && request.resource.data.code.size() <= 12
+          && request.resource.data.date is string && request.resource.data.date.size() <= 10
+          && request.resource.data.doctor is string && request.resource.data.doctor.size() <= 120;
+      }
+      match /medications/{id} {
+        allow read, delete: if mine(uid);
+        allow create, update: if mine(uid)
+          && request.resource.data.keys().hasOnly(['name','dose','time','notes','createdAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 120
+          && request.resource.data.dose is string && request.resource.data.dose.size() > 0 && request.resource.data.dose.size() <= 80
+          && request.resource.data.time in ['Rano','Południe','Wieczór','Według potrzeb']
+          && request.resource.data.notes is string && request.resource.data.notes.size() <= 300;
+      }
+      match /specialists/{id} {
+        allow read, delete: if mine(uid);
+        allow create, update: if mine(uid)
+          && request.resource.data.keys().hasOnly(['name','role','phone','location','createdAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 120
+          && request.resource.data.role is string && request.resource.data.role.size() > 0 && request.resource.data.role.size() <= 100
+          && request.resource.data.phone is string && request.resource.data.phone.size() <= 35
+          && request.resource.data.location is string && request.resource.data.location.size() <= 150;
+      }
+      match /documents/{id} {
+        allow read, delete: if mine(uid);
+        allow create: if mine(uid)
+          && request.resource.data.keys().hasOnly(['name', 'storagePath', 'size', 'createdAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() <= 180
+          && request.resource.data.storagePath is string
+          && request.resource.data.storagePath.matches('users/' + uid + '/documents/[a-zA-Z0-9_-]+')
+          && request.resource.data.size is int && request.resource.data.size > 0 && request.resource.data.size <= 10485760;
+      }
+    }
+  }
+}
