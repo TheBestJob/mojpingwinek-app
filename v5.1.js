@@ -11,7 +11,7 @@ async function documentApi(method,path,body=null,filename=""){
  if(!current) throw new Error("Zaloguj się ponownie.");
  const token=await current.getIdToken();
  const headers={"Authorization":"Bearer "+token};
- if(body){headers["Content-Type"]=body.type;headers["X-File-Name"]=filename;}
+ if(body){headers["Content-Type"]=body.type;headers["X-File-Name"]=encodeURIComponent(filename);}
  const res=await fetch(API_ROOT+path,{method,headers,body});
  if(!res.ok){let msg="Serwer dokumentów: HTTP "+res.status;try{let data=await res.json();if(data.error)msg=data.error}catch{}throw new Error(msg)}
  if(res.status===204)return null;
