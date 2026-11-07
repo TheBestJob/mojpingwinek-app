@@ -130,7 +130,9 @@ export default {
       if (sizeHeader > MAX_FILE_BYTES) return response(request,413,"File too large (5 MB maximum)");
       const body = await request.arrayBuffer();
       if (body.byteLength < 1 || body.byteLength > MAX_FILE_BYTES) return response(request,413,"File must be 1 byte to 5 MB");
-      const original = safeName(request.headers.get("X-File-Name"));
+      let requestedName = request.headers.get("X-File-Name") || "plik";
+      try {requestedName=decodeURIComponent(requestedName)} catch {}
+      const original = safeName(requestedName);
       const stem = original.replace(/\.(pdf|jpg|jpeg|png)$/i,"").slice(0,75);
       const id = crypto.randomUUID()+"--"+(stem||"plik")+"."+ALLOWED_MIME[contentType];
       const url = base+"/object/"+BUCKET+"/"+uid+"/"+id;
