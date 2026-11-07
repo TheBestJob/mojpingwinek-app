@@ -1,0 +1,7 @@
+name = "moj-pingwinek-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# Required runtime secrets:
+# SUPABASE_URL (set as text var or secret)
+# SUPABASE_SERVICE_ROLE_KEY (ALWAYS encrypt as a Worker secret)
