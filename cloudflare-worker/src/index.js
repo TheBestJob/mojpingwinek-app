@@ -97,9 +97,18 @@ function safeName(original) {
 async function upstream(request, url, env, options={}) {
   const res = await fetch(url, {...options, redirect:"manual"});
   if (!res.ok) {
-    // Do not surface privileged backend error bodies to public clients.
-    console.error("Supabase storage error",res.status);
-    return response(request, res.status===404?404:502, "Storage operation unsuccessful");
+    // Return only a controlled error code/status; NEVER expose upstream payload,
+    // credentials, tokens, bucket objects or user-supplied data.
+    let code = "Unknown";
+    try {
+      const body = await res.json();
+      const candidate = body?.code || body?.errorCode || body?.error;
+      if (typeof candidate === "string" && /^[A-Za-z][A-Za-z0-9_]{0,49}$/.test(candidate)) code = candidate;
+    } catch {}
+    console.error("Supabase Storage:", res.status, code);
+    return response(request, 502, "Supabase Storage rejected request", {
+      upstreamStatus: res.status, upstreamCode: code
+    });
   }
   return res;
 }
