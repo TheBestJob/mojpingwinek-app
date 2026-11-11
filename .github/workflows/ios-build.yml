@@ -1,0 +1,44 @@
+name: Build Mój Pingwinek iOS
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - ".github/workflows/ios-build.yml"
+  workflow_dispatch:
+jobs:
+  ios:
+    runs-on: macos-15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Build for iOS Simulator (unsigned)
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project MojPingwinek.xcodeproj \
+            -scheme MojPingwinek \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath build \
+            build
+      - name: Package simulator test app
+        run: |
+          cd ios/build/Build/Products/Debug-iphonesimulator
+          zip -qry "$GITHUB_WORKSPACE/MojPingwinek-iOS-Simulator.zip" MojPingwinek.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MojPingwinek-iOS-Simulator
+          path: MojPingwinek-iOS-Simulator.zip
+          retention-days: 14
